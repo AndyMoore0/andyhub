@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>AndyHub Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center">
+  <div class="max-w-5xl w-full mx-auto p-6">
+    <header class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">AndyHub</h1>
+        <p class="text-sm text-slate-400">Tu panel personal de clima, notas y tareas.</p>
+      </div>
+      <span id="userName" class="text-sm text-slate-300"></span>
+    </header>
+
+    <div class="grid gap-4 md:grid-cols-3">
+
+      <!-- Clima -->
+      <section class="bg-slate-800/70 rounded-2xl p-4 shadow">
+        <h2 class="text-lg font-semibold mb-2">Clima</h2>
+        <p id="weatherCity" class="text-sm text-slate-300"></p>
+        <p id="weatherTemp" class="text-3xl font-bold mt-2"></p>
+        <p id="weatherDesc" class="text-sm text-slate-400 mt-1"></p>
+      </section>
+
+      <!-- Tareas -->
+      <section class="bg-slate-800/70 rounded-2xl p-4 shadow">
+        <h2 class="text-lg font-semibold mb-2">Tareas</h2>
+        <ul id="taskList" class="space-y-1 text-sm"></ul>
+      </section>
+
+      <!-- Notas -->
+      <section class="bg-slate-800/70 rounded-2xl p-4 shadow">
+        <h2 class="text-lg font-semibold mb-2">Notas</h2>
+        <ul id="notesList" class="space-y-1 text-sm"></ul>
+      </section>
+
+    </div>
+
+    <footer class="mt-6 text-center text-xs text-slate-500">
+      Hecho por Andy Moore • Powered by Node.js + Express
+    </footer>
+  </div>
+
+  <script>
+      
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/widgets');
+        const data = await res.json();
+
+        // Usuario
+        const userName = data.user?.name || 'Andy';
+        document.getElementById('userName').textContent = `Hola, ${userName} 👋`;
+
+        // Clima
+        if (data.weather) {
+          document.getElementById('weatherCity').textContent = data.weather.city || '';
+          document.getElementById('weatherTemp').textContent =
+            (data.weather.temp !== undefined ? data.weather.temp + '°C' : '');
+          document.getElementById('weatherDesc').textContent =
+            data.weather.description || '';
+        }
+
+        // Tareas
+        const taskList = document.getElementById('taskList');
+        taskList.innerHTML = '';
+        (data.tasks || []).forEach(task => {
+          const li = document.createElement('li');
+          li.textContent = (task.done ? '✅ ' : '⬜ ') + task.text;
+          taskList.appendChild(li);
+        });
+
+        // Notas
+        const notesList = document.getElementById('notesList');
+        notesList.innerHTML = '';
+        (data.notes || []).forEach(note => {
+          const li = document.createElement('li');
+          li.textContent = '• ' + note;
+          notesList.appendChild(li);
+        });
+      } catch (err) {
+        console.error('Error cargando dashboard:', err);
+      }
+    }
+
+    loadDashboard();
+  </script>
+
+
+</body>
+</html>

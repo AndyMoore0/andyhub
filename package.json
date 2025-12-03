@@ -1,0 +1,23 @@
+{
+  "name": "andyhub",
+  "version": "1.0.0",
+  "description": "AndyHub - Panel personal fullstack (dashboard de clima, notas y tareas).",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "Andy Moore",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "nodemon": "^3.1.0"
+  }
+}
